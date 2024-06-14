@@ -1,32 +1,52 @@
 // src/components/PangramChecker.tsx
 import React, { useState } from 'react';
-import { isPangram } from '../pangram';
 
 const PangramChecker: React.FC = () => {
-    const [sentence, setSentence] = useState<string>('');
-    const [result, setResult] = useState<boolean | null>(null);
+    const [x, setX] = useState<number>(0);
+    const [y, setY] = useState<number>(0);
+    const [points, setPoints] = useState<number | null>(null);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSentence(event.target.value);
+    const handleChangeX = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setX(parseFloat(event.target.value));
     };
 
-    const checkPangram = () => {
-        setResult(isPangram(sentence));
+    const handleChangeY = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setY(parseFloat(event.target.value));
+    };
+
+    const calcularPuntosDardos = () => {
+        const distancia = Math.sqrt(x * x + y * y);
+
+        if (distancia > 10) {
+            setPoints(0);
+        } else if (distancia > 5) {
+            setPoints(1);
+        } else if (distancia > 1) {
+            setPoints(5);
+        } else {
+            setPoints(10);
+        }
     };
 
     return (
         <div>
-            <h1>Pangram Checker</h1>
-            <input 
-                type="text" 
-                value={sentence} 
-                onChange={handleChange} 
-                placeholder="Enter a sentence" 
-            />
-            <button onClick={checkPangram}>Check</button>
-            {result !== null && (
+            <h1>Darts Points Calculator</h1>
+            <div>
+                <label>
+                    X Coordinate:
+                    <input type="number" value={x} onChange={handleChangeX} />
+                </label>
+            </div>
+            <div>
+                <label>
+                    Y Coordinate:
+                    <input type="number" value={y} onChange={handleChangeY} />
+                </label>
+            </div>
+            <button onClick={calcularPuntosDardos}>Calculate Points</button>
+            {points !== null && (
                 <div>
-                    {result ? <p>The sentence is a pangram!</p> : <p>The sentence is not a pangram.</p>}
+                    <p>Points earned: {points}</p>
                 </div>
             )}
         </div>
